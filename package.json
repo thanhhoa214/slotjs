@@ -1,10 +1,10 @@
 {
-  "name": "@lit/lit-starter-ts",
-  "private": true,
-  "version": "2.0.1",
-  "description": "A simple web component",
-  "main": "slot-machine.js",
-  "module": "slot-machine.js",
+  "name": "circular-slot-machine",
+  "version": "1.0.1",
+  "description": "A simple slot machine web component",
+  "main": "slot-machine",
+  "module": "slot-machine",
+  "types": "slot-machine",
   "type": "module",
   "scripts": {
     "build": "tsc",
@@ -36,9 +36,11 @@
     "web-components",
     "lit-element",
     "typescript",
-    "lit"
+    "lit",
+    "slot-machine",
+    "circular slot-machine"
   ],
-  "author": "Google LLC",
+  "author": "thanhhoa214",
   "license": "BSD-3-Clause",
   "dependencies": {
     "@lit-labs/motion": "^1.0.6",
