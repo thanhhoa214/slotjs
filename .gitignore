@@ -3,9 +3,9 @@
 /test/
 custom-elements.json
 # top level source
-my-element.js
-my-element.js.map
-my-element.d.ts
-my-element.d.ts.map
+slot-machine.js
+slot-machine.js.map
+slot-machine.d.ts
+slot-machine.d.ts.map
 # only generated for size check
-my-element.bundled.js
+slot-machine.bundled.js
