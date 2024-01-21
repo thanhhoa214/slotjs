@@ -14,6 +14,20 @@
     </style>
   </head>
   <body>
+    <button onclick="play()">Play</button>
+    <button onclick="stop()">Stop</button>
     <slot-machine></slot-machine>
+
+    <script>
+      const slotMachine = document.querySelector('slot-machine');
+
+      function play() {
+        slotMachine.play();
+      }
+
+      function stop() {
+        slotMachine.stop();
+      }
+    </script>
   </body>
 </html>

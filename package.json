@@ -1,6 +1,6 @@
 {
   "name": "circular-slot-machine",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple slot machine web component",
   "main": "slot-machine",
   "module": "slot-machine",

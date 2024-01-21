@@ -38,6 +38,8 @@ const styles = css`
   }
 
   :host {
+    display: block;
+    width: fit-content;
     --reelRadius: 80px;
     --reelCount: 4;
   }
@@ -112,6 +114,12 @@ const styles = css`
   }
 `;
 
+export enum SlotMachineEvent {
+  Play = 'sm-play',
+  Finish = 'sm-finish',
+  ChangeRotatingIndex = 'change-rotating-index',
+}
+
 /**
  * An example element.
  *
@@ -124,9 +132,7 @@ const styles = css`
 @customElement('slot-machine')
 export class SlotMachineElement extends LitElement {
   static override styles = styles;
-  /**
-   * The name to say "Hello" to.
-   */
+
   @property({type: Array})
   accessor items = [
     '🍋',
@@ -153,6 +159,9 @@ export class SlotMachineElement extends LitElement {
   reelCount = 4;
 
   @state()
+  private _rotatingIndex = -1;
+
+  @state()
   private _reelShuffledItems: Array<typeof this.items> = Array.from(
     {length: this.reelCount},
     () => shuffle(this.items)
@@ -163,9 +172,6 @@ export class SlotMachineElement extends LitElement {
     this.reelCount * this.reelRadius + this.spaceCenterRadius;
 
   @state()
-  private _rotatingIndex = -1;
-
-  @state()
   private _reelRefs: Array<Ref<HTMLUListElement>> = [];
 
   @state()
@@ -173,7 +179,6 @@ export class SlotMachineElement extends LitElement {
 
   override render() {
     this._reelRefs = [];
-    // this._selectionIndices = [];
 
     return html`
       <section
@@ -207,8 +212,6 @@ export class SlotMachineElement extends LitElement {
             `
           : ''} -->
       </section>
-      <button @click=${() => this.play()}>Play</button>
-      <button @click=${() => this.stop()}>Stop</button>
     `;
   }
 
@@ -217,10 +220,13 @@ export class SlotMachineElement extends LitElement {
     requestAnimationFrame(() =>
       this._reelRefs.forEach((r) => r.value?.classList.add('rotating'))
     );
-    this.dispatchEvent(new CustomEvent('sm-play'));
+
+    this._emitEvent(SlotMachineEvent.Play);
+    this._emitEvent(SlotMachineEvent.ChangeRotatingIndex, this._rotatingIndex);
   }
 
   stop() {
+    if (this._rotatingIndex === -1) return;
     this._rotatingIndex--;
 
     const reelRef = this._reelRefs[this._rotatingIndex];
@@ -248,9 +254,16 @@ export class SlotMachineElement extends LitElement {
 
     this._selectionIndices.push(stopAtIndex);
 
-    this.dispatchEvent(new CustomEvent('sm-stop-reel'));
-    if (this._rotatingIndex === -1)
-      this.dispatchEvent(new CustomEvent('sm-finish'));
+    this._emitEvent(SlotMachineEvent.ChangeRotatingIndex, this._rotatingIndex);
+
+    if (this._rotatingIndex === 0) {
+      this._rotatingIndex = -1;
+      this._emitEvent(
+        SlotMachineEvent.ChangeRotatingIndex,
+        this._rotatingIndex
+      );
+      this._emitEvent(SlotMachineEvent.Finish);
+    }
   }
 
   /**
@@ -276,6 +289,10 @@ export class SlotMachineElement extends LitElement {
         )}
       </ul>
     `;
+  }
+
+  private _emitEvent(event: SlotMachineEvent, detail?: unknown) {
+    this.dispatchEvent(new CustomEvent(event, {detail}));
   }
 }
 
